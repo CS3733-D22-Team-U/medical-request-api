@@ -1,41 +1,75 @@
 package edu.wpi.cs3733.D22.teamU.MedicineData;
 
+import java.time.LocalDate;
+
+/** Medicine Object */
 public class Medicine {
   private String ID;
   private String medicineName;
   private String destinationID;
   private String patientID;
   private String employeeID;
-
-  private String dateNeeded;
-
+  private LocalDate dateNeeded;
   private String amount;
 
+  /**
+   * Return amount of medication needed Note: Amount is a String since different units of medication
+   * might be needed (ex. 1 pill is not the same as 1mg)
+   *
+   * @return String of amount
+   */
   public String getAmount() {
     return amount;
   }
 
+  /**
+   * Set amount of medication needed Note: Amount is a String since different units of medication
+   * might be needed (ex. 1 pill is not the same as 1mg)
+   *
+   * @param amount Amount of medicine
+   */
   public void setAmount(String amount) {
     this.amount = amount;
   }
 
   public Medicine(
-      String id,
+      String ID,
       String medicineName,
       String destinationID,
       String patientID,
       String employeeID,
-      String dateNeeded,
+      LocalDate dateNeeded,
       String amount) {
-    setID(id);
     setMedicineName(medicineName);
     setDestinationID(destinationID);
     setPatientID(patientID);
     setEmployeeID(employeeID);
     setDateNeeded(dateNeeded);
     setAmount(amount);
+    setID(ID);
   }
 
+  public Medicine(
+      String medicineName,
+      String destinationID,
+      String patientID,
+      String employeeID,
+      LocalDate dateNeeded,
+      String amount) {
+    setMedicineName(medicineName);
+    setDestinationID(destinationID);
+    setPatientID(patientID);
+    setEmployeeID(employeeID);
+    setDateNeeded(dateNeeded);
+    setAmount(amount);
+    setID(makeID());
+  }
+
+  /**
+   * Gets ID of object
+   *
+   * @return ID of Object
+   */
   public String getID() {
     return ID;
   }
@@ -76,11 +110,11 @@ public class Medicine {
     this.employeeID = employeeID;
   }
 
-  public String getDateNeeded() {
+  public LocalDate getDateNeeded() {
     return dateNeeded;
   }
 
-  public void setDateNeeded(String dateNeeded) {
+  public void setDateNeeded(LocalDate dateNeeded) {
     this.dateNeeded = dateNeeded;
   }
 
@@ -102,9 +136,23 @@ public class Medicine {
         + ", employeeID='"
         + employeeID
         + '\''
-        + ", dateNeeded='"
+        + ", dateNeeded="
         + dateNeeded
+        + ", amount='"
+        + amount
         + '\''
         + '}';
+  }
+
+  private String makeID() {
+    return medicineName
+        + "_"
+        + destinationID
+        + "_"
+        + patientID
+        + "_"
+        + employeeID
+        + "_"
+        + dateNeeded.toString();
   }
 }

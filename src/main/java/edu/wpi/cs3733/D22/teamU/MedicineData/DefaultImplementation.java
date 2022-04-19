@@ -2,30 +2,35 @@ package edu.wpi.cs3733.D22.teamU.MedicineData;
 
 import java.util.HashMap;
 
+/** Default MedicineDao with no functionality */
 public class DefaultImplementation extends MedicineDao {
 
+  /** Default MedicineDao with no functionality */
   public DefaultImplementation() {
     setMedicines(new HashMap<>());
   }
 
+  /**
+   * No functionality
+   *
+   * @param m The Medicine Object that was added
+   */
   @Override
-  public void add(Medicine m) {
-    if (getMedicines().containsKey(m.getID()))
-      throw new RuntimeException("Medicine with same ID already exists.");
-    else getMedicines().put(m.getID(), m);
-  }
+  public void add(Medicine m) {}
 
+  /**
+   * No functionality
+   *
+   * @param m The Medicine Object that was added
+   */
   @Override
-  public void edit(Medicine m) {
-    if (getMedicines().containsKey(m.getID())) {
-      getMedicines().put(m.getID(), m);
-    } else throw new RuntimeException("Medicine with same ID was not found to edit.");
-  }
+  public void edit(Medicine m) {}
 
+  /**
+   * No functionality
+   *
+   * @param m The Medicine Object that was added
+   */
   @Override
-  public void remove(Medicine m) {
-    if (getMedicines().containsKey(m.getID())) {
-      getMedicines().remove(m.getID());
-    } else throw new RuntimeException("Medicine with same ID was not found to delete.");
-  }
+  public void remove(Medicine m) {}
 }

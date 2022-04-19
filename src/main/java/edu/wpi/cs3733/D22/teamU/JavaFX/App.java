@@ -20,32 +20,28 @@ public class App extends Application {
 
   @Override
   public void start(Stage primaryStage) throws IOException {
-    if (Settings.windowLength <= 0)
+    if (Settings.getWindowLength() <= 0)
       primaryStage.setHeight(Screen.getPrimary().getBounds().getHeight());
-    else primaryStage.setHeight(Settings.windowLength);
+    else primaryStage.setHeight(Settings.getWindowLength());
 
-    if (Settings.windowWidth <= 0)
+    if (Settings.getWindowWidth() <= 0)
       primaryStage.setWidth(Screen.getPrimary().getBounds().getWidth());
-    else primaryStage.setWidth(Settings.windowWidth);
+    else primaryStage.setWidth(Settings.getWindowWidth());
 
-    if (Settings.xCoord <= 0) primaryStage.setX(0);
-    else primaryStage.setX(Settings.xCoord);
+    if (Settings.getxCoord() <= 0) primaryStage.setX(0);
+    else primaryStage.setX(Settings.getxCoord());
 
-    if (Settings.yCoord <= 0) primaryStage.setY(0);
-    primaryStage.setY(Settings.yCoord);
-    Scene scene =
-        getScene(
-            "edu/wpi/cs3733/D22/teamU/fxmlFiles/MedicineRequest.fxml",
-            new MedicineRequestController());
-    scene.getStylesheets().add(Settings.cssPath);
+    if (Settings.getyCoord() <= 0) primaryStage.setY(0);
+    primaryStage.setY(Settings.getyCoord());
+    Scene scene = getScene("edu/wpi/cs3733/D22/teamU/fxmlFiles/MedicineRequest.fxml");
+    scene.getStylesheets().add(Settings.getCssPath());
     primaryStage.setTitle("Medicine Request Service");
     primaryStage.setScene(scene);
     primaryStage.setResizable(true);
     primaryStage.show();
   }
 
-  private static Scene getScene(String path, MedicineRequestController medicineRequestController)
-      throws IOException {
+  private static Scene getScene(String path) throws IOException {
     FXMLLoader loader = new FXMLLoader();
     Parent root = loader.load(App.class.getClassLoader().getResource(path));
 
