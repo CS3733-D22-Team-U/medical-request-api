@@ -1,9 +1,12 @@
 package edu.wpi.cs3733.D22.teamU.MedicineData;
 
+import edu.wpi.cs3733.D22.teamU.Employee.DefaultEmployee;
+import edu.wpi.cs3733.D22.teamU.Location.DefaultLocation;
+
 import java.util.HashMap;
 
 /** Default MedicineDao with no functionality */
-public class DefaultImplementation extends MedicineDao {
+public class DefaultImplementation extends MedicineDao<DefaultEmployee, DefaultLocation> {
 
   /** Default MedicineDao with no functionality */
   public DefaultImplementation() {

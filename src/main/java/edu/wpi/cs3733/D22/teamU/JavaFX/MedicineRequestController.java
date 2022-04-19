@@ -1,5 +1,6 @@
 package edu.wpi.cs3733.D22.teamU.JavaFX;
 
+import edu.wpi.cs3733.D22.teamU.Employee.DefaultEmployee;
 import edu.wpi.cs3733.D22.teamU.MedicineData.Medicine;
 import edu.wpi.cs3733.D22.teamU.Settings;
 import java.net.URL;
@@ -7,6 +8,7 @@ import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.ResourceBundle;
 import javafx.beans.binding.Bindings;
+import javafx.beans.value.ObservableStringValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.Initializable;
@@ -25,10 +27,8 @@ public class MedicineRequestController implements Initializable {
   public Button addBtn;
   public Button removeBtn;
   public Button editBtn;
-  public TextField destination;
   public TextField name;
   public TextField patient;
-  public TextField staff;
   public TextField amount;
   public TextArea status;
   public StackPane stack;
@@ -39,6 +39,8 @@ public class MedicineRequestController implements Initializable {
   public TableColumn<Medicine, LocalDate> cdate;
   public TableColumn<Medicine, String> camount;
   public TableView table;
+  public ComboBox<String> destinationbox;
+  public ComboBox<DefaultEmployee> staffbox;
   private Medicine temp;
 
   /**
@@ -50,8 +52,11 @@ public class MedicineRequestController implements Initializable {
   @Override
   public void initialize(URL location, ResourceBundle resources) {
     setColumnProperty();
-    destination.setText(Settings.getDestLocationID());
-    // Settings.medicineActions.getMedicines().put( "test",new Medicine( "test", "test", "test",
+    staffbox.setItems(
+        FXCollections.observableArrayList(Settings.getInstance().getAuthorizedEmployees().values()));
+    staffbox.setValue(Settings.getInstance().getCurrent());
+
+    // Settings.getInstance().medicineActions.getMedicines().put( "test",new Medicine( "test", "test", "test",
     // "test", "test", LocalDate.of(2003, 1, 19), "test"));
     updateRequests();
     disableOnEmpty(addBtn);
@@ -100,10 +105,10 @@ public class MedicineRequestController implements Initializable {
     b.disableProperty()
         .bind(
             Bindings.isEmpty(date.getEditor().textProperty())
-                .or(Bindings.isEmpty(destination.textProperty()))
+                .or(Bindings.isEmpty((ObservableStringValue) destinationbox.valueProperty()))
                 .or(Bindings.isEmpty(name.textProperty()))
                 .or(Bindings.isEmpty(patient.textProperty()))
-                .or(Bindings.isEmpty(staff.textProperty()))
+                .or(Bindings.isEmpty((ObservableStringValue) staffbox.getValue()))
                 .or(Bindings.isEmpty(amount.textProperty())));
   }
 
@@ -111,7 +116,7 @@ public class MedicineRequestController implements Initializable {
 
   private void updateRequests() {
     medicines =
-        FXCollections.observableArrayList(Settings.getMedicineActions().getMedicines().values());
+        FXCollections.observableArrayList(Settings.getInstance().getMedicineActions().getMedicines().values());
     medicines.sort(
         new Comparator<Medicine>() {
           @Override
@@ -128,10 +133,10 @@ public class MedicineRequestController implements Initializable {
 
   private void clearText() {
     date.getEditor().clear();
-    destination.setText("");
+    destinationbox.setValue("");
     name.setText("");
     patient.setText("");
-    staff.setText("");
+    destinationbox.setValue("");
     amount.setText("");
   }
 
@@ -150,11 +155,11 @@ public class MedicineRequestController implements Initializable {
             date.getValue(),
             amount.getText());
 
-    if (Settings.getMedicineActions().getMedicines().containsKey(m.getID())) {
+    if (Settings.getInstance().getMedicineActions().getMedicines().containsKey(m.getID())) {
       status.setText("Medicine with same ID already exists.");
     } else {
-      Settings.getMedicineActions().getMedicines().put(m.getID(), m);
-      Settings.getMedicineActions().add(m);
+      Settings.getInstance().getMedicineActions().getMedicines().put(m.getID(), m);
+      Settings.getInstance().getMedicineActions().add(m);
       updateRequests();
       clearText();
       status.setText("Successfully added new request.");
@@ -179,11 +184,12 @@ public class MedicineRequestController implements Initializable {
               staff.getText(),
               date.getValue(),
               amount.getText());
-      if (Settings.getMedicineActions().getMedicines().containsKey(m.getID())) {
-        Settings.getMedicineActions().getMedicines().remove(m.getID());
-        Settings.getMedicineActions().remove(m);
+      if (Settings.getInstance().getMedicineActions().getMedicines().containsKey(m.getID())) {
+        Settings.getInstance().getMedicineActions().getMedicines().remove(m.getID());
+        Settings.getInstance().getMedicineActions().remove(m);
         updateRequests();
         clearText();
+        temp = null;
         status.setText("Successfully removed request.");
       } else status.setText("Medicine with same ID was not found to delete.");
     }
@@ -207,11 +213,12 @@ public class MedicineRequestController implements Initializable {
               staff.getText(),
               date.getValue(),
               amount.getText());
-      if (Settings.getMedicineActions().getMedicines().containsKey(m.getID())) {
-        Settings.getMedicineActions().getMedicines().put(m.getID(), m);
-        Settings.getMedicineActions().edit(m);
+      if (Settings.getInstance().getMedicineActions().getMedicines().containsKey(m.getID())) {
+        Settings.getInstance().getMedicineActions().getMedicines().put(m.getID(), m);
+        Settings.getInstance().getMedicineActions().edit(m);
         updateRequests();
         clearText();
+        temp = null;
         status.setText("Successfully edited request.");
       } else status.setText("Medicine with same ID was not found to edit.");
     }

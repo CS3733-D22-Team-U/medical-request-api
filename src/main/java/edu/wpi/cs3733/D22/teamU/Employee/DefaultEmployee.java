@@ -2,10 +2,10 @@ package edu.wpi.cs3733.D22.teamU.Employee;
 
 import java.util.Objects;
 
-public class Employee {
+public class DefaultEmployee {
   private String ID;
 
-  public Employee(String ID) {
+  public DefaultEmployee(String ID) {
     this.ID = ID;
   }
 
@@ -13,7 +13,7 @@ public class Employee {
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
-    Employee employee = (Employee) o;
+    DefaultEmployee employee = (DefaultEmployee) o;
     return Objects.equals(ID, employee.ID);
   }
 
@@ -28,5 +28,10 @@ public class Employee {
 
   public void setID(String ID) {
     this.ID = ID;
+  }
+
+  @Override
+  public String toString() {
+    return getID();
   }
 }

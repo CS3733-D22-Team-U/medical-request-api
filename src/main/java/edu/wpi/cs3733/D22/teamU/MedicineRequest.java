@@ -1,14 +1,15 @@
 package edu.wpi.cs3733.D22.teamU;
 
-import edu.wpi.cs3733.D22.teamU.Employee.Employee;
+import edu.wpi.cs3733.D22.teamU.Employee.DefaultEmployee;
 import edu.wpi.cs3733.D22.teamU.Exception.ServiceException;
 import edu.wpi.cs3733.D22.teamU.JavaFX.App;
+import edu.wpi.cs3733.D22.teamU.Location.DefaultLocation;
 import edu.wpi.cs3733.D22.teamU.MedicineData.MedicineDao;
 import java.io.File;
 import java.net.MalformedURLException;
 
 /** Edit and open the Medicine Request window menu. */
-public class MedicineRequest {
+public class MedicineRequest<Employee, Location> {
 
   /**
    * Runs the App with default settings as well as the default .css file
@@ -16,10 +17,16 @@ public class MedicineRequest {
    * @param args
    */
   public static void main(String[] args) throws ServiceException {
-    setCurrentEmployee("Test");
-    addAuthorizedEmployee("Test");
+    MedicineRequest<DefaultEmployee, DefaultLocation> md = new MedicineRequest<>();
+    Settings.getInstance().instance = new Settings<DefaultEmployee, DefaultEmployee>();
+    md.addAuthorizedEmployee("Test", new DefaultEmployee("Test"));
+    md.setCurrentEmployee(new DefaultEmployee("Test"));
     App.launch(App.class, args);
   }
+
+  public MedicineRequest(){
+  }
+
 
   /**
    * Runs the App with custom settings
@@ -34,7 +41,7 @@ public class MedicineRequest {
    * @param cssPath Custom .css File Path
    * @param destLocationID Location ID for service request
    */
-  public static void run(
+  public void run(
       int xCoord,
       int yCoord,
       int windowWidth,
@@ -42,14 +49,14 @@ public class MedicineRequest {
       String cssPath,
       String destLocationID)
       throws ServiceException {
-    Settings.xCoord = xCoord;
-    Settings.yCoord = yCoord;
-    Settings.windowWidth = windowWidth;
-    Settings.windowLength = windowLength;
-    Settings.cssPath = styleSheetFormat(cssPath);
-    Settings.destLocationID = destLocationID;
+    Settings.getInstance().xCoord = xCoord;
+    Settings.getInstance().yCoord = yCoord;
+    Settings.getInstance().windowWidth = windowWidth;
+    Settings.getInstance().windowLength = windowLength;
+    Settings.getInstance().cssPath = styleSheetFormat(cssPath);
+    Settings.getInstance().destLocationID = destLocationID;
 
-    if (Settings.getAuthorizedEmployees().containsKey(Settings.current.getID()))
+    if (Settings.getInstance().getAuthorizedEmployees().containsValue(Settings.getInstance().getCurrent()))
       App.launch(App.class, new String[] {});
     else throw new ServiceException("Current employee is not authorized to use this service.");
   }
@@ -62,11 +69,11 @@ public class MedicineRequest {
    *
    * @param medicineDao
    */
-  public static void setAddEditRemoveFunctions(MedicineDao medicineDao) {
-    Settings.medicineActions = medicineDao;
+  public void setAddEditRemoveFunctions(MedicineDao<Employee, Location> medicineDao) {
+    Settings.getInstance().medicineActions = medicineDao;
   }
 
-  private static String styleSheetFormat(String path) throws ServiceException {
+  private String styleSheetFormat(String path) throws ServiceException {
     try {
       File stylesheetFile = new File(path);
       return stylesheetFile.toURI().toURL().toString();
@@ -81,10 +88,10 @@ public class MedicineRequest {
    * @param ID ID of employee to give access
    * @throws ServiceException If employee is already authorized
    */
-  public static void addAuthorizedEmployee(String ID) throws ServiceException {
-    if (Settings.getAuthorizedEmployees().containsKey(ID))
+  public void addAuthorizedEmployee(String ID, Employee e) throws ServiceException {
+    if (Settings.getInstance().getAuthorizedEmployees().containsKey(ID))
       throw new ServiceException("Employee already authorized");
-    else Settings.getAuthorizedEmployees().put(ID, new Employee(ID));
+    else Settings.getInstance().getAuthorizedEmployees().put(ID,e);
   }
 
   /**
@@ -93,32 +100,31 @@ public class MedicineRequest {
    * @param ID ID of employee to remove access
    * @throws ServiceException If employee with ID is not found
    */
-  public static void removeAuthorizedEmployee(String ID) throws ServiceException {
-    if (Settings.getAuthorizedEmployees().containsKey(ID))
-      Settings.getAuthorizedEmployees().remove(ID);
+  public void removeAuthorizedEmployee(String ID) throws ServiceException {
+    if (Settings.getInstance().getAuthorizedEmployees().containsKey(ID))
+      Settings.getInstance().getAuthorizedEmployees();
     else throw new ServiceException("Employee already not authorized.");
   }
 
   /**
-   * Edits an authorized employee's ID
+   * //todo
    *
-   * @param oldId Old employee ID
-   * @param newID New employee ID
-   * @throws ServiceException If employee with old ID wasn't found
+   * @param ID
+   * @param updated
+   * @throws ServiceException
    */
-  public static void editAuthorizedEmployee(String oldId, String newID) throws ServiceException {
-    if (Settings.getAuthorizedEmployees().containsKey(oldId)) {
-      removeAuthorizedEmployee(oldId);
-      addAuthorizedEmployee(newID);
+  public void editAuthorizedEmployee(String ID, Employee updated) throws ServiceException {
+    if (Settings.getInstance().getAuthorizedEmployees().containsKey(ID)) {
+      Settings.getInstance().getAuthorizedEmployees().put(ID, updated);
     } else throw new ServiceException("Could not find employee with old ID");
   }
 
   /**
    * Sets the current Employee that with will be using this request page
    *
-   * @param id ID of employee
+   * @param e Employee object
    */
-  public static void setCurrentEmployee(String id) {
-    Settings.current = new Employee(id);
+  public void setCurrentEmployee(Employee e) {
+    Settings.getInstance().current = e;
   }
 }

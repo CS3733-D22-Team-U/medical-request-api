@@ -3,12 +3,12 @@ package edu.wpi.cs3733.D22.teamU.MedicineData;
 import java.time.LocalDate;
 
 /** Medicine Object */
-public class Medicine {
+public class Medicine <Employee,Location>{
   private String ID;
   private String medicineName;
-  private String destinationID;
+  private Location destination;
   private String patientID;
-  private String employeeID;
+  private Employee employee;
   private LocalDate dateNeeded;
   private String amount;
 
@@ -35,31 +35,43 @@ public class Medicine {
   public Medicine(
       String ID,
       String medicineName,
-      String destinationID,
+      Location destinationID,
       String patientID,
-      String employeeID,
+      Employee employeeID,
       LocalDate dateNeeded,
       String amount) {
     setMedicineName(medicineName);
-    setDestinationID(destinationID);
+    setDestination(destinationID);
     setPatientID(patientID);
-    setEmployeeID(employeeID);
+    setEmployee(employeeID);
     setDateNeeded(dateNeeded);
     setAmount(amount);
     setID(ID);
   }
 
+  public void setDestination(Location destination) {
+    this.destination = destination;
+  }
+
+  public Employee getEmployee() {
+    return employee;
+  }
+
+  public void setEmployee(Employee employee) {
+    this.employee = employee;
+  }
+
   public Medicine(
       String medicineName,
-      String destinationID,
+      Location destination,
       String patientID,
-      String employeeID,
+      Employee employee,
       LocalDate dateNeeded,
       String amount) {
     setMedicineName(medicineName);
-    setDestinationID(destinationID);
+    setDestination(destination);
     setPatientID(patientID);
-    setEmployeeID(employeeID);
+    setEmployee(employee);
     setDateNeeded(dateNeeded);
     setAmount(amount);
     setID(makeID());
@@ -86,12 +98,8 @@ public class Medicine {
     this.medicineName = medicineName;
   }
 
-  public String getDestinationID() {
-    return destinationID;
-  }
-
-  public void setDestinationID(String destinationID) {
-    this.destinationID = destinationID;
+  public Object getDestination() {
+    return destination;
   }
 
   public String getPatientID() {
@@ -102,13 +110,6 @@ public class Medicine {
     this.patientID = patientID;
   }
 
-  public String getEmployeeID() {
-    return employeeID;
-  }
-
-  public void setEmployeeID(String employeeID) {
-    this.employeeID = employeeID;
-  }
 
   public LocalDate getDateNeeded() {
     return dateNeeded;
@@ -128,13 +129,13 @@ public class Medicine {
         + medicineName
         + '\''
         + ", destinationID='"
-        + destinationID
+        + destination.toString()
         + '\''
         + ", patientID='"
         + patientID
         + '\''
         + ", employeeID='"
-        + employeeID
+        + employee.toString()
         + '\''
         + ", dateNeeded="
         + dateNeeded
@@ -147,11 +148,11 @@ public class Medicine {
   private String makeID() {
     return medicineName
         + "_"
-        + destinationID
+        + destination.toString()
         + "_"
         + patientID
         + "_"
-        + employeeID
+        + employee.toString()
         + "_"
         + dateNeeded.toString();
   }

@@ -1,54 +1,74 @@
 package edu.wpi.cs3733.D22.teamU;
 
-import edu.wpi.cs3733.D22.teamU.Employee.Employee;
+import edu.wpi.cs3733.D22.teamU.Employee.DefaultEmployee;
 import edu.wpi.cs3733.D22.teamU.MedicineData.DefaultImplementation;
 import edu.wpi.cs3733.D22.teamU.MedicineData.MedicineDao;
 import java.util.HashMap;
 
-public abstract class Settings {
-  static int xCoord = 0, yCoord = 0, windowWidth = 0, windowLength = 0;
-  static String cssPath =
+public class Settings <Employee, Location>{
+
+  static Settings instance;
+  public static Settings getInstance() {
+    return instance;
+  }
+
+  Settings(){
+
+  }
+
+   int xCoord = 0, yCoord = 0, windowWidth = 0, windowLength = 0;
+   String cssPath =
       String.valueOf(
           MedicineRequest.class
               .getClassLoader()
               .getResource("edu/wpi/cs3733/D22/teamU/cssFiles/default.css"));
-  static String destLocationID;
+   String destLocationID;
 
-  static Employee current = new Employee("");
+   Employee current = null;
 
-  static MedicineDao medicineActions = new DefaultImplementation();
+   MedicineDao medicineActions = new DefaultImplementation();
 
-  static HashMap<String, Employee> authorizedEmployees = new HashMap<>();
+   HashMap<String, Employee> authorizedEmployees = new HashMap<>();
 
-  public static int getxCoord() {
+  public  int getxCoord() {
     return xCoord;
   }
 
-  public static int getyCoord() {
+  public  int getyCoord() {
     return yCoord;
   }
 
-  public static int getWindowWidth() {
+  public  int getWindowWidth() {
     return windowWidth;
   }
 
-  public static int getWindowLength() {
+  public  int getWindowLength() {
     return windowLength;
   }
 
-  public static String getCssPath() {
+  public  String getCssPath() {
     return cssPath;
   }
 
-  public static String getDestLocationID() {
+  public  String getDestLocationID() {
     return destLocationID;
   }
 
-  public static MedicineDao getMedicineActions() {
+  public  MedicineDao getMedicineActions() {
     return medicineActions;
   }
 
-  public static HashMap<String, Employee> getAuthorizedEmployees() {
+  public  HashMap<String, Employee> getAuthorizedEmployees() {
     return authorizedEmployees;
+  }
+
+  public  Employee getCurrent() {
+    return current;
+  }
+
+   HashMap<String, Location> locations;
+
+  public  HashMap<String, Location> getLocations(){
+    return locations;
   }
 }
