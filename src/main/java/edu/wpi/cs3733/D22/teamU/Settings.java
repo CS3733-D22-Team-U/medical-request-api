@@ -1,6 +1,7 @@
 package edu.wpi.cs3733.D22.teamU;
 
-import edu.wpi.cs3733.D22.teamU.Employee.Employee;
+import edu.wpi.cs3733.D22.teamU.Employee.DefaultEmployee;
+import edu.wpi.cs3733.D22.teamU.Location.DefaultLocation;
 import edu.wpi.cs3733.D22.teamU.MedicineData.DefaultImplementation;
 import edu.wpi.cs3733.D22.teamU.MedicineData.MedicineDao;
 import java.util.HashMap;
@@ -14,11 +15,15 @@ public abstract class Settings {
               .getResource("edu/wpi/cs3733/D22/teamU/cssFiles/default.css"));
   static String destLocationID;
 
-  static Employee current = new Employee("");
+  static DefaultEmployee current = new DefaultEmployee("");
+
+  public static DefaultEmployee getCurrent() {
+    return current;
+  }
 
   static MedicineDao medicineActions = new DefaultImplementation();
 
-  static HashMap<String, Employee> authorizedEmployees = new HashMap<>();
+  static HashMap<String, DefaultEmployee> authorizedEmployees = new HashMap<>();
 
   public static int getxCoord() {
     return xCoord;
@@ -48,7 +53,13 @@ public abstract class Settings {
     return medicineActions;
   }
 
-  public static HashMap<String, Employee> getAuthorizedEmployees() {
+  public static HashMap<String, DefaultEmployee> getAuthorizedEmployees() {
     return authorizedEmployees;
+  }
+
+  static HashMap<String, DefaultLocation> locations = new HashMap<>();
+
+  public static HashMap<String, DefaultLocation> getLocations() {
+    return locations;
   }
 }

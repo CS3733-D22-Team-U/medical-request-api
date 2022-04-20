@@ -1,5 +1,7 @@
 package edu.wpi.cs3733.D22.teamU.JavaFX;
 
+import edu.wpi.cs3733.D22.teamU.Employee.DefaultEmployee;
+import edu.wpi.cs3733.D22.teamU.Location.DefaultLocation;
 import edu.wpi.cs3733.D22.teamU.MedicineData.Medicine;
 import edu.wpi.cs3733.D22.teamU.Settings;
 import java.net.URL;
@@ -25,10 +27,8 @@ public class MedicineRequestController implements Initializable {
   public Button addBtn;
   public Button removeBtn;
   public Button editBtn;
-  public TextField destination;
   public TextField name;
   public TextField patient;
-  public TextField staff;
   public TextField amount;
   public TextArea status;
   public StackPane stack;
@@ -39,6 +39,8 @@ public class MedicineRequestController implements Initializable {
   public TableColumn<Medicine, LocalDate> cdate;
   public TableColumn<Medicine, String> camount;
   public TableView table;
+  public ComboBox<DefaultLocation> destinationbox;
+  public ComboBox<DefaultEmployee> staffbox;
   private Medicine temp;
 
   /**
@@ -50,7 +52,13 @@ public class MedicineRequestController implements Initializable {
   @Override
   public void initialize(URL location, ResourceBundle resources) {
     setColumnProperty();
-    destination.setText(Settings.getDestLocationID());
+    destinationbox.setItems(FXCollections.observableArrayList(Settings.getLocations().values()));
+    staffbox.setItems(
+        FXCollections.observableArrayList(Settings.getAuthorizedEmployees().values()));
+
+    destinationbox.setValue(new DefaultLocation(Settings.getDestLocationID()));
+
+    staffbox.setValue(Settings.getCurrent());
     // Settings.medicineActions.getMedicines().put( "test",new Medicine( "test", "test", "test",
     // "test", "test", LocalDate.of(2003, 1, 19), "test"));
     updateRequests();
@@ -100,10 +108,21 @@ public class MedicineRequestController implements Initializable {
     b.disableProperty()
         .bind(
             Bindings.isEmpty(date.getEditor().textProperty())
-                .or(Bindings.isEmpty(destination.textProperty()))
+                /*
+                .or(
+                    Bindings.isEmpty(
+                        (ObservableStringValue)
+                            destinationbox.getSelectionModel().getSelectedItem()))
+
+                     */
                 .or(Bindings.isEmpty(name.textProperty()))
                 .or(Bindings.isEmpty(patient.textProperty()))
-                .or(Bindings.isEmpty(staff.textProperty()))
+                /*
+                .or(
+                    Bindings.isEmpty(
+                        (ObservableStringValue) staffbox.getSelectionModel().getSelectedItem()))
+
+                         */
                 .or(Bindings.isEmpty(amount.textProperty())));
   }
 
@@ -128,10 +147,10 @@ public class MedicineRequestController implements Initializable {
 
   private void clearText() {
     date.getEditor().clear();
-    destination.setText("");
+    destinationbox.setValue(null);
     name.setText("");
     patient.setText("");
-    staff.setText("");
+    destinationbox.setValue(null);
     amount.setText("");
   }
 
@@ -144,9 +163,9 @@ public class MedicineRequestController implements Initializable {
     Medicine m =
         new Medicine(
             name.getText(),
-            destination.getText(),
+            destinationbox.getValue().getID(),
             patient.getText(),
-            staff.getText(),
+            staffbox.getValue().getID(),
             date.getValue(),
             amount.getText());
 
@@ -174,9 +193,9 @@ public class MedicineRequestController implements Initializable {
           new Medicine(
               temp.getID(),
               name.getText(),
-              destination.getText(),
+              destinationbox.getValue().getID(),
               patient.getText(),
-              staff.getText(),
+              staffbox.getValue().getID(),
               date.getValue(),
               amount.getText());
       if (Settings.getMedicineActions().getMedicines().containsKey(m.getID())) {
@@ -202,9 +221,9 @@ public class MedicineRequestController implements Initializable {
           new Medicine(
               temp.getID(),
               name.getText(),
-              destination.getText(),
+              destinationbox.getValue().getID(),
               patient.getText(),
-              staff.getText(),
+              staffbox.getValue().getID(),
               date.getValue(),
               amount.getText());
       if (Settings.getMedicineActions().getMedicines().containsKey(m.getID())) {
@@ -227,10 +246,10 @@ public class MedicineRequestController implements Initializable {
       temp = (Medicine) table.getSelectionModel().getSelectedItem();
       date.setValue(temp.getDateNeeded());
       date.getEditor().setText(temp.getDateNeeded().toString());
-      destination.setText(temp.getDestinationID());
+      destinationbox.setValue(Settings.getLocations().get(temp.getDestinationID()));
       name.setText(temp.getMedicineName());
       patient.setText(temp.getPatientID());
-      staff.setText(temp.getEmployeeID());
+      staffbox.setValue(Settings.getAuthorizedEmployees().get(temp.getEmployeeID()));
       amount.setText(temp.getAmount());
     }
   }

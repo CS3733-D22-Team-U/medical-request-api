@@ -1,11 +1,13 @@
 package edu.wpi.cs3733.D22.teamU;
 
-import edu.wpi.cs3733.D22.teamU.Employee.Employee;
+import edu.wpi.cs3733.D22.teamU.Employee.DefaultEmployee;
 import edu.wpi.cs3733.D22.teamU.Exception.ServiceException;
 import edu.wpi.cs3733.D22.teamU.JavaFX.App;
+import edu.wpi.cs3733.D22.teamU.Location.DefaultLocation;
 import edu.wpi.cs3733.D22.teamU.MedicineData.MedicineDao;
 import java.io.File;
 import java.net.MalformedURLException;
+import java.util.List;
 
 /** Edit and open the Medicine Request window menu. */
 public class MedicineRequest {
@@ -18,6 +20,8 @@ public class MedicineRequest {
   public static void main(String[] args) throws ServiceException {
     setCurrentEmployee("Test");
     addAuthorizedEmployee("Test");
+    Settings.destLocationID = "Location1";
+    Settings.getLocations().put("Location1", new DefaultLocation("Location1"));
     App.launch(App.class, args);
   }
 
@@ -84,7 +88,7 @@ public class MedicineRequest {
   public static void addAuthorizedEmployee(String ID) throws ServiceException {
     if (Settings.getAuthorizedEmployees().containsKey(ID))
       throw new ServiceException("Employee already authorized");
-    else Settings.getAuthorizedEmployees().put(ID, new Employee(ID));
+    else Settings.getAuthorizedEmployees().put(ID, new DefaultEmployee(ID));
   }
 
   /**
@@ -119,6 +123,10 @@ public class MedicineRequest {
    * @param id ID of employee
    */
   public static void setCurrentEmployee(String id) {
-    Settings.current = new Employee(id);
+    Settings.current = new DefaultEmployee(id);
+  }
+
+  public static void addLocationIDs(List<String> ids) {
+    for (String id : ids) Settings.getLocations().put(id, new DefaultLocation(id));
   }
 }
